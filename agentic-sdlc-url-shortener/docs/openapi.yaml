@@ -1,0 +1,142 @@
+openapi: 3.0.3
+info:
+  title: URL Shortener API
+  version: '1.0.0'
+  description: >-
+    Short-link creation, resolution, and click analytics.
+    Management endpoints require an X-API-Key header; redirects are public.
+servers:
+  - url: http://127.0.0.1:8080
+components:
+  securitySchemes:
+    ApiKeyAuth:
+      type: apiKey
+      in: header
+      name: X-API-Key
+  schemas:
+    Error:
+      type: object
+      properties:
+        error:
+          type: object
+          properties:
+            code: { type: string }
+            message: { type: string }
+            request_id: { type: string }
+    Link:
+      type: object
+      properties:
+        code: { type: string }
+        short_url: { type: string }
+        url: { type: string, format: uri }
+        created_at: { type: string, format: date-time }
+        expires_at: { type: string, format: date-time, nullable: true }
+        custom_alias: { type: boolean }
+paths:
+  /api/v1/links:
+    get:
+      operationId: list_links
+      summary: List short links
+      security:
+        - ApiKeyAuth: []
+      responses:
+        '200':
+          description: page of links
+    post:
+      operationId: create_link
+      summary: Create a short link
+      security:
+        - ApiKeyAuth: []
+      responses:
+        '201':
+          description: created
+        '400':
+          description: validation error
+        '409':
+          description: alias taken
+  /api/v1/links/{param}:
+    delete:
+      operationId: delete_link
+      summary: Soft-delete a link
+      security:
+        - ApiKeyAuth: []
+      parameters:
+        - name: code
+          in: path
+          required: true
+          schema: { type: string }
+      responses:
+        '204':
+          description: deleted
+        '404':
+          description: unknown code
+    get:
+      operationId: get_link
+      summary: Fetch link metadata
+      security:
+        - ApiKeyAuth: []
+      parameters:
+        - name: code
+          in: path
+          required: true
+          schema: { type: string }
+      responses:
+        '200':
+          description: link metadata
+        '404':
+          description: unknown code
+  /api/v1/links/{param}/stats:
+    get:
+      operationId: link_stats
+      summary: Fetch aggregated click analytics
+      security:
+        - ApiKeyAuth: []
+      parameters:
+        - name: code
+          in: path
+          required: true
+          schema: { type: string }
+      responses:
+        '200':
+          description: aggregated analytics
+        '404':
+          description: unknown code
+  /healthz:
+    get:
+      operationId: healthz
+      summary: Liveness probe
+      responses:
+        '200':
+          description: alive
+  /metrics:
+    get:
+      operationId: metrics
+      summary: Prometheus metrics
+      responses:
+        '200':
+          description: Prometheus exposition
+  /readyz:
+    get:
+      operationId: readyz
+      summary: Readiness probe
+      responses:
+        '200':
+          description: ready
+        '503':
+          description: degraded
+  /{param}:
+    get:
+      operationId: redirect
+      summary: Resolve a short code and redirect
+      parameters:
+        - name: code
+          in: path
+          required: true
+          schema: { type: string }
+      responses:
+        '302':
+          description: redirect
+        '404':
+          description: unknown code
+        '410':
+          description: expired or deleted
