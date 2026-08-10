@@ -1,0 +1,1 @@
+package com.example.orchestrator; import java.util.Map; public record NodeResult(boolean success,String summary,Map<String,Object> artifacts){public static NodeResult ok(String s){return new NodeResult(true,s,Map.of());}public static NodeResult fail(String s){return new NodeResult(false,s,Map.of());}}

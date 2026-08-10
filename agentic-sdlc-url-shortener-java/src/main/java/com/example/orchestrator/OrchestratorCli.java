@@ -1,0 +1,3 @@
+package com.example.orchestrator;
+import java.nio.file.Path;
+public class OrchestratorCli {public static void main(String[] args){String command=args.length>0?args[0]:"plan";String scenario=args.length>1?args[1]:"greenfield";WorkflowGraph graph=WorkflowFactory.create(scenario);if(command.equals("plan")){int i=0;for(var level:graph.levels()){System.out.println("level "+i++);for(var n:level)System.out.println("  - "+n.id()+" ["+n.role()+"] <- "+n.dependencies());}return;}var report=new OrchestrationEngine(new ApprovalStore()).run(graph,new RunContext(scenario, Path.of(".")),true);System.out.println("run="+report.runId());report.statuses().forEach((k,v)->System.out.println(k+": "+v));System.out.println("auditValid="+report.auditValid());}}

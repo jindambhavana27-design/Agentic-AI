@@ -1,0 +1,1 @@
+package com.example.orchestrator; public enum NodeStatus {PENDING,RUNNING,SUCCEEDED,FAILED,WAITING_APPROVAL,ROLLED_BACK,SKIPPED}
