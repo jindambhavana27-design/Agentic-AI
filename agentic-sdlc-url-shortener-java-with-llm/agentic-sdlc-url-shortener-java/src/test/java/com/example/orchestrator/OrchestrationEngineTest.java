@@ -1,0 +1,2 @@
+package com.example.orchestrator; import org.junit.jupiter.api.Test; import java.nio.file.Path; import static org.junit.jupiter.api.Assertions.*;
+class OrchestrationEngineTest {@Test void workflowCompletes(){var report=new OrchestrationEngine(new ApprovalStore()).run(WorkflowFactory.create("greenfield"),new RunContext("greenfield", Path.of(".")),true);assertTrue(report.auditValid());assertTrue(report.statuses().values().stream().allMatch(s->s==NodeStatus.SUCCEEDED));}}
