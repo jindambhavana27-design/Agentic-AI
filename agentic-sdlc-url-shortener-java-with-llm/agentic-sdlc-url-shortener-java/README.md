@@ -13,6 +13,7 @@ $cp = Get-Content classpath.txt
 $cp = "target\\classes;$cp"
 ```
 
+
 ## 2. Configure the LLM
 
 ### Ollama (Local LLM)
