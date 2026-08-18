@@ -1,0 +1,2 @@
+package com.example.orchestrator; import java.util.concurrent.ConcurrentHashMap;
+public class ApprovalStore {public enum Decision{PENDING,APPROVED,REJECTED}private final ConcurrentHashMap<String,Decision> values=new ConcurrentHashMap<>();private String key(String r,String n){return r+":"+n;}public Decision get(String r,String n){return values.getOrDefault(key(r,n),Decision.PENDING);}public void decide(String r,String n,Decision d){values.put(key(r,n),d);}}

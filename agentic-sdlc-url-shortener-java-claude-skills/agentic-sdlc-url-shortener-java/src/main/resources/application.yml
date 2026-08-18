@@ -1,0 +1,19 @@
+server:
+  address: ${SHORTENER_HOST:127.0.0.1}
+  port: ${SHORTENER_PORT:8080}
+management:
+  endpoints.web.exposure.include: health,prometheus
+  endpoint.health.probes.enabled: true
+shortener:
+  base-url: ${SHORTENER_BASE_URL:http://127.0.0.1:${SHORTENER_PORT:8080}}
+  db-path: ${SHORTENER_DB_PATH:shortener.db}
+  api-keys: ${SHORTENER_API_KEYS:}
+  require-auth: ${SHORTENER_REQUIRE_AUTH:true}
+  code-length: ${SHORTENER_CODE_LENGTH:7}
+  redirect-status: ${SHORTENER_REDIRECT_STATUS:302}
+  default-ttl-seconds: ${SHORTENER_DEFAULT_TTL_SECONDS:}
+  allow-private-hosts: ${SHORTENER_ALLOW_PRIVATE_HOSTS:false}
+  rate-limit-enabled: ${SHORTENER_RATE_LIMIT_ENABLED:true}
+  rate-limit-capacity: ${SHORTENER_RATE_LIMIT_CAPACITY:60}
+  rate-limit-refill-per-second: ${SHORTENER_RATE_LIMIT_REFILL:1.0}
+  analytics-enabled: ${SHORTENER_ANALYTICS_ENABLED:true}
